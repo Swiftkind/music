@@ -1,0 +1,89 @@
+{% extends 'playlist/base.html' %} 
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class = "col-md-3">
+
+        <form method="post" id = "Create_List">
+            {% csrf_token %}
+                <label>Playlist Title:</label><input type = "text" name = "title"><br>
+                <label>Description:</label><textarea name = "description"></textarea><br>
+            <button type = "submit" >Create New Playlist</button>
+        </form>
+
+        <ul class="nav nav-pills nav-stacked" id = "playlists">
+            {% for playlist in pl %}
+            <li>
+                <span><span><a href = "{% url 'playlist_songs' playlist.id %}">{{playlist.title}}</a> 
+                    <span  class = "cornerdelete"><small>
+                        <form method = "post" action = "{% url 'playlist_delete' playlist.id %}">
+                            {% csrf_token %}
+                            <button type = "submit">x</button>
+                        </form>
+                    </small></span>
+                </span>
+                </span><br>
+                <small><small><a href = "{% url 'playlist_detail' playlist.id %}">Edit</a></small></small></span><br>
+                <p>{{playlist.description}}</p>
+                <ul>
+                    {% for song in playlist.songs.values|slice:":4" %}
+                        <li><a href = "{% url 'playlist_songdetail' playlist.id song.id %}">{{song.title}}</a><pre>{{song.link}}</pre></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class = "col-md-6">
+    </div>
+
+    <div class = "col-md-3">
+    </div>
+
+  </div>
+</div>
+
+{% block js %}
+
+<script>
+
+Playlist_Add_URL = "{% url 'playlists' %}"; // to add playlist
+Playlist_Detail_URL = "{% url 'playlist_detail' 345345 %}"; // url for edit playlist
+Playlist_Detail_Songs = "{% url 'playlist_songs' 11111111 %}"; // add songs to playlist
+Playlist_Delete = "{% url 'playlist_delete' 9090909 %}";       // url for deleting playlist
+crsf_token = "{% csrf_token %}";
+
+/*             AJAX Add For Playlist                 */
+$( "#Create_List" ).submit(function( e ){
+    e.preventDefault();
+    $.ajax({
+            method: 'POST',
+            url: Playlist_Add_URL,
+            data: $(this).serialize() 
+          }).done(function(response){
+          var content_to_prepend = "<li><span><span>"
+                              +"<a href = '"+Playlist_Detail_Songs.replace('11111111', response.id)
+                              +"'>"+response.title+"</a>"
+                              +"<span class = 'cornerdelete'><small>"
+                              +" <form method = 'post' action ='" + Playlist_Delete.replace('9090909', response.id)
+                              +"'><br>"+ crsf_token + "<button type = 'submit'>x</button>"
+                              +"</form></small></span>"
+                              +"</span></span>"
+                              +" <small><small>"
+                              +"<a href = '"+Playlist_Detail_URL.replace('345345', response.id)+"'>Edit</a></small></small></span><br>";
+                              +"<p value= '"+response.description+"'></p>";
+                              +"</li>";
+
+            $( "#playlists" ).prepend(content_to_prepend);
+        });
+});
+/*             AJAX Add For Playlist                 */
+
+</script>
+
+{% endblock %}
+
+{% endblock %}
+

@@ -1,0 +1,26 @@
+{% extends 'playlist/base.html' %} 
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-3">
+    {{playlist.title}}<br>
+    {{playlist.description}}<br>
+    {{playlist.date_created}}<br>
+    {{playlist.date_updated}}<br>
+  </div>
+
+    <div class = "col-md-5">
+        <form method="post">
+            {% csrf_token %}
+            <label>Playlist Title:</label><input type = "text" name = "title" value = "{{playlist.title}}"><br>
+            <label>Description:</label><textarea name = "description">{{playlist.description}}</textarea><br>
+            <button type = "submit">Update Playlist</button>
+        </form>
+    </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
