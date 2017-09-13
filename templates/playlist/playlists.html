@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+
+        <div class = "col-md-3">
+            <form method = 'POST' id = "CreatePlaylist">
+                {% csrf_token %}
+                <input type = "text" name = "title" placeholder = "Playlist Name">
+                    <div id = "playlist_add_error"></div>
+                {{form.description}}
+                <button type = "Submit">Create Playlist</button>
+            </form>
+
+            <ul id = "PlayLists">
+                {% for playlist in playlists %}
+                    <li><a href="{% url 'playlist' playlist.id %}">{{playlist.title}}</a>
+                        <br>
+                        <small>
+                            <a href = "{% url 'playlist_detail' playlist.id %}">Edit</a> 
+                        </small>
+                        |
+                       <small>
+                            <a href = "{% url 'delete_playlist' playlist.id %}">Delete</a> 
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class = "col-md-6">
+        </div>
+
+        <div class = "col-md-3">
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+    /* django urls from playlist module for playlist-functions.js */
+        create_playlist_url = '{% url "playlists" %}';
+    </script>
+
+{% endblock %}

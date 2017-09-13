@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class = "col-md-3">
+            <h2>{{playlist.title}}</h2>
+            <p>{{playlist.description}}</p>
+            <small>{{playlist.date_created}}</small><small>{{playlist.date_updated}}</small>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
