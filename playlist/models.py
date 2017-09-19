@@ -4,7 +4,7 @@ from users.models import User
 
 
 class Playlist(models.Model):
-    """Songlist
+    """Playlist
     """
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -20,7 +20,7 @@ class Song(models.Model):
     """
     playlist = models.ForeignKey(Playlist)
     title = models.CharField(max_length=255)
-    link = models.URLField()
+    link = models.CharField(max_length=50)
     user = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

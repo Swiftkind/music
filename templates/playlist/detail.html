@@ -1,0 +1,9 @@
+<form method="post" novalidate>
+  {% csrf_token %}
+  <input type="text" name="title" placeholder="song title" value="{{ form.instance.title }}">
+  {{ form.title.errors}}
+  <br>
+  <input type="text" name="link" placeholder="youtube id of the song" value="{{ form.instance.link }}">
+  {{ form.link.errors}}
+  <button type="submit">Update Song</button>
+</form>

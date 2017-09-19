@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('users.urls')),
     url(r'^videoplayer/', include('videoplayer.urls')),
+    url(r'^music/',include('playlist.urls')),
 ]

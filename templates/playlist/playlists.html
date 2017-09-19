@@ -1,0 +1,16 @@
+<form method="post" novalidate>
+  {% csrf_token %}
+  <label>Title:</label>
+  <input type="text" name="title" placeholder="title">
+  {{ form.title.errors }}
+  <br>
+  <label>Description:</label>
+  <input type="text" name="description" placeholder="description of playlist">
+<button type = 'submit'>Add Playlist</button>
+</form>
+
+<ul>
+{% for playlist in playlists %}
+  <li><a href="{% url 'playlist' playlist.id %}">{{ playlist.title }}</a></li>
+{% endfor %}
+</ul>

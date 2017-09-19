@@ -1,0 +1,25 @@
+<h5>Playlist {{ playlist.title }}</h5>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  <label>Title:</label>
+  <input type="text" name="title" placeholder="song title">
+  {{ form.title.errors }}
+  <br>
+  <label>URL:</label>
+  <input type="text" name="link" placeholder="youtube id of the song">
+  {{ form.link.errors }}
+  <button type="submit">(+)</button>
+</form>
+
+<ul>
+{% for song in songs %}
+  <li>
+  {{ song.title }}
+  <small>
+  <a href="{% url 'song_detail' playlist.id song.id %}">Edit</a>
+  <a href="{% url 'song_delete' playlist.id song.id %}">Delete</a>
+  </small>
+  </li>
+{% endfor %}
+</ul>
