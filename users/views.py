@@ -104,7 +104,6 @@ class UpdateProfileView(LoginRequiredMixin, TemplateView):
     def get(self, *args, **kwargs):
         """ display
         """
-        
         form = UpdateProfileForm(instance=self.request.user)
         return render(self.request, self.template_name, {'form':form})
 
