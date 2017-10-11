@@ -19,7 +19,7 @@ class UserLoginView(TemplateView):
         """ Renders the login form
         """
         if self.request.user.is_authenticated():
-            return redirect('dashboard')
+            return redirect('all_playlist')
         form = LoginForm()
         return render(self.request, self.template_name, {'form':form})
 
@@ -29,21 +29,9 @@ class UserLoginView(TemplateView):
         form = LoginForm(self.request.POST)
         if form.is_valid():
             login(self.request, form.user)
-            return redirect('dashboard')
+            return redirect('all_playlist')
 
         return render(self.request, self.template_name, {'form':form})
-
-
-class DashboardView(LoginRequiredMixin, TemplateView):
-    """ Displays the dashboard page and used LoginRequiredMixin 
-        to check the user if logged in.
-    """
-    template_name = 'dashboard.html'
-
-    def get(self, *args, **kwargs):
-        """ Renders the dashboard page
-        """
-        return render(self.request, self.template_name, {})
 
 
 class UserLogoutView(View):
@@ -74,7 +62,7 @@ class RegisterView(TemplateView):
             user = authenticate(self.request, email=self.request.POST['email'], 
                                               password=self.request.POST['password'])
             login(self.request, user)
-            return redirect('dashboard')
+            return redirect('all_playlist')
             
         return render(self.request, self.template_name, {'form':form})
 

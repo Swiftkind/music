@@ -55,12 +55,11 @@ class PlaylistView(LoginRequiredMixin, TemplateView):
         form = SongForm(user=self.request.user, playlist=playlist)
         songs = Song.objects.filter(playlist=playlist, archive=False)
         raw_ids = songs.values_list('link', flat=True)
-        song_ids = [song.encode('utf8') for song in raw_ids]
         return render(self.request, self.template_name, {
             'playlist': playlist,
             'songs': songs,
             'form':form,
-            'song_ids': list(song_ids)
+            'song_ids': list(raw_ids)
         })
 
     def post(self,*args,**kwargs):

@@ -4,4 +4,4 @@ media/
 static/
 *db.sqlite3
 *.DS_Store
-*manage.py-oauth2.json
+*.py-oauth2.json
