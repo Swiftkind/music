@@ -10,4 +10,4 @@ def get_profile_pic(user):
     images = user.profilepicture_set.all().order_by('-id')
     if images.exists():
         return images[0].imagefile.url
-    return 'images/default.jpeg'
+    return '/static/picture/default.jpeg'
