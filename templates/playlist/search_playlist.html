@@ -1,20 +1,17 @@
+
 {% load static %}
 
-<h1>Search Results</h1>
+<h2>Search Results</h2>
 {% if playlists %}
   {% for playlist in playlists %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h1>{{ playlist.title }}</h2>
+      <h3>{{ playlist.title }}</h3>
     </div>
     <div class="panel-body">
       <div class="col-md-6">
         <div class="row">
-          {% if playlist.get_thumb_url %}
-            <img class="img-responsive" src="{{ playlist.get_thumb_url }}">
-          {% else %}
-            <img class="img-responsive" src="{% static 'picture/playlist_default.jpg' %}">
-          {% endif %}
+            <img class="img-responsive" src="{{ playlist.get_thumb_url }}" width="120px" height="90px">
         </div>
       </div>
       <div class="col-md-6">

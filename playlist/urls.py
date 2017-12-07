@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^playlist/playlistsearch/$', SearchedPlaylist.as_view(), name='search_playlist'),
     url(r'^playlist/search/add/$', AddToPlaylistFromYoutube.as_view(), name='add_youtube_search'),
     # DRF API
-    url(r'^api/add/playlist/$', PlaylistViewSet.as_view({'post': 'add_playlist'}), name='add_playlist')
+    url(r'^api/playlist/$', PlaylistViewSet.as_view(
+        {'post': 'add_playlist'}), name='playlist'),
 ]

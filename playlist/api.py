@@ -8,7 +8,7 @@ from rest_framework import status
 
 
 class PlaylistViewSet(viewsets.ViewSet):
-    """ Displays all the playlist
+    """ Playlist functions
     """
     def add_playlist(self, request):
         serializer = PlaylistSerializer(data=self.request.data)

@@ -82,30 +82,29 @@
     event.preventDefault();
     var form = $('#add_playlist').serialize();
     $.post({
-      url: 'api/add/playlist/',
+      url: $(this).attr('url'),
       data: form
     }).done(function(response){
-     var playlist_tpl = '<div class="media">'
-                    + '<div class="media-left media-middle">'
-                    +   '<a href="/music/playlist/'+ response.id +'/">'
-                    +    '<img class="media-object" src="'+ response.get_thumb_url +'" width="120px" height="90px">'
-                    +   '</a>'
-                    + '</div>'
-                    + '<div class="media-body">'
-                    + '<a href="/music/playlist/'+ response.id +'/">'
-                    +  '<h4 class="media-heading">'+ response.title +'</h4>'
-                    + '</a>'
-                    + '0 songs'
-                    + '<br>'
-                    + 'By: '+ response.user_email +''
-                    + '<br>'
-                    + '<a href="' 
-                    +  + '">Edit</a>'
-                    + ' '
-                    + '<a href="'
-                    +  + '">Delete</a>'
-                    + '</div>'
-                    + '</div>';
+
+     var playlist_tpl = '<div class="panel panel-default">'
+                          +'<div class="panel-heading">'
+                            +'<h3>'+ response.title +'</h3>'
+                          +'</div>'
+                          +'<div class="panel-body">'
+                            +'<div class="col-md-6">'
+                              +'<div class="row">'
+                                  +'<img class="img-responsive" src="'+ response.get_thumb_url +'" width="120px" height="90px">'
+                              +'</div>'
+                            +'</div>'
+                            +'<div class="col-md-6">'
+                             +'<hr class="visible-sm visible-xs">'
+                              +'<p>0 songs</p>'
+                              +'<p>by <strong>'+ response.user_email +'</strong></p>'
+
+                              +'<a class="btn btn-primary" href="/music/playlist/'+ response.id +'/">View Playlist</a>'
+                            +'</div>'
+                          +'</div>'
+                        +'</div>';
       $('#playlists').append(playlist_tpl);
       $('#add_playlist')[0].reset();
     }).fail(function(response){
