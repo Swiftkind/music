@@ -60,7 +60,7 @@ class PlaylistView(LoginRequiredMixin, TemplateView):
             'playlist': playlist,
             'songs': songs,
             'form':form,
-            'song_ids': list(song_ids)
+            'song_ids': list(raw_ids)
         })
 
     def post(self,*args,**kwargs):
@@ -104,7 +104,7 @@ class SongDetail(LoginRequiredMixin, TemplateView):
     """
     template_name = 'playlist/detail.html'
 
-    def get(self, *args, **kwargs): 
+    def get(self, *args, **kwargs):
         """show song details
         """
         song = get_object_or_404(
