@@ -19,6 +19,7 @@ class AllPlaylistView(LoginRequiredMixin, TemplateView):
     """
     template_name = 'playlist/playlists.html'
 
+
     def get(self, *args, **kwargs):
         """show all playlists
         """
@@ -33,13 +34,16 @@ class AllPlaylistView(LoginRequiredMixin, TemplateView):
     def post(self, *args, **kwargs):
         """create playlist
         """
+
         form = PlaylistForm(self.request.POST, user=self.request.user)
+ 
         if form.is_valid():
             form.save()
             return redirect('all_playlist')
+
         return render(self.request, self.template_name, {
             'playlists': Playlist.objects.all(),
-            'form': form
+            'form': form,
         })
 
 
@@ -149,7 +153,7 @@ class SongDelete(LoginRequiredMixin, View):
         #to archive a song
         song.save(archive=True)
         return JsonResponse({'song_id':song.id}, safe=False)
-
+        
 
 class SearchSongYoutube(Youtube, LoginRequiredMixin, TemplateView):
     """ Search song on youtube from inside the app

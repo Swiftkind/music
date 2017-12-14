@@ -12,6 +12,7 @@ class PlaylistForm(forms.ModelForm):
     class Meta:
         model = Playlist
         fields = ['title', 'description']
+        unique_together = ('title','user')
 
     def __init__(self, *args, **kwargs):
         """ playlist needs an owner
@@ -27,6 +28,7 @@ class PlaylistForm(forms.ModelForm):
         instance.save()
         return instance
 
+
     def clean_title(self):
         """ overriden so that there cannot be the same playlist name from a user
         """
@@ -34,10 +36,12 @@ class PlaylistForm(forms.ModelForm):
             title=self.cleaned_data['title'],
             user=self.user
         )
+
         if playlist.exists():
             raise forms.ValidationError(
                 'You already have a playlist with the same name'
             )
+        
         return self.cleaned_data['title']
 
 

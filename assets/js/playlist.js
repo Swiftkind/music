@@ -1,3 +1,4 @@
+
   //ajax for adding songs
   $(document).on('submit', '#songForm' , function( event ){
     event.preventDefault();
@@ -78,6 +79,7 @@
     });
   });
 
+
   $(document).on('click', '#btn-add', function(event){
     event.preventDefault();
     var form = $('#add_playlist').serialize();
@@ -86,28 +88,59 @@
       data: form
     }).done(function(response){
 
-     var playlist_tpl = '<div class="panel panel-default">'
-                          +'<div class="panel-heading">'
-                            +'<h3>'+ response.title +'</h3>'
-                          +'</div>'
-                          +'<div class="panel-body">'
-                            +'<div class="col-md-6">'
-                              +'<div class="row">'
-                                  +'<img class="img-responsive" src="'+ response.get_thumb_url +'" width="120px" height="90px">'
-                              +'</div>'
-                            +'</div>'
-                            +'<div class="col-md-6">'
-                             +'<hr class="visible-sm visible-xs">'
-                              +'<p>0 songs</p>'
-                              +'<p>by <strong>'+ response.user_email +'</strong></p>'
 
-                              +'<a class="btn btn-primary" href="/music/playlist/'+ response.id +'/">View Playlist</a>'
-                            +'</div>'
-                          +'</div>'
-                        +'</div>';
-      $('#playlists').append(playlist_tpl);
-      $('#add_playlist')[0].reset();
-    }).fail(function(response){
-      alert("Something went wrong!")
+          var playlist_tpl = '<div class="panel panel-default">'
+                                +'<div class="panel-heading">'
+                                  +'<h3>'+ response.title +'</h3>'
+                                +'</div>'
+                          
+                                +'<div class="panel-body">'
+                                  +'<div class="col-md-6">'
+                                    +'<div class="row">'
+                                      +'<img class="img-responsive" src="'+ response.get_thumb_url +'" width="120px" height="90px">'
+                                    +'</div>'
+                                  +'</div>'
+                                  
+                                  +'<div class="col-md-6">'
+                                    +'<hr class="visible-sm visible-xs">'
+                                      +'<p>0 songs</p>'
+                                      +'<p>by <strong>'+ response.user_email +'</strong></p>'
+
+                                      +'<a class="btn btn-primary" href="/music/playlist/'+ response.id +'/">View Playlist</a>'
+                                  +'</div>'
+                                +'</div>'
+                              +'</div>';
+          $('#playlists').append(playlist_tpl);
+          $('#add_playlist')[0].reset();
+      })
+    .fail(function(response){
+        alert("Something went wrong  !")
+    });
+
+  });
+
+  $(document).on('click', 'form.delete_playlist', function(event){
+    event.preventDefault();
+    var form = $(this).serialize();
+    $.ajax({
+      type: 'post',
+      url: $(this).attr('action'),
+      data: form
+    }).done(function(response){
+      //remove playlist from the template
+      var playlist_id = $('form.delete_playlist').closest('li').attr('id');
+      $('li#'+playlist_id).remove();
     });
   });
+
+
+    
+
+      
+    
+
+ 
+
+
+
+ 
