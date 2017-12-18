@@ -26,4 +26,7 @@ urlpatterns = [
     # DRF API
     url(r'^api/playlist/$', PlaylistViewSet.as_view(
         {'post': 'add_playlist'}), name='playlist'),
+    url(r'^api/playlist/(?P<playlist_id>\d+)/$', PlaylistViewSet.as_view(
+        {'post': 'delete_playlist'}), name='delete_playlist'),
+
 ]

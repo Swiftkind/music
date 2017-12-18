@@ -111,3 +111,17 @@
       alert("Something went wrong!")
     });
   });
+
+  // ajax for deleting Playlist
+  $(document).on('submit', 'form.deletePlaylist', function( event ){
+    event.preventDefault();
+    $.ajax({
+      method: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      context: $(this)
+    }).done(function(response){
+      //remove playlist from the template
+      $(this).closest("div.panel").remove();
+    });
+  });

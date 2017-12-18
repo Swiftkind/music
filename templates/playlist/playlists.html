@@ -47,6 +47,14 @@
         <p>by <strong>{{ playlist.user }}</strong></p>
 
         <a class="btn btn-primary" href="{% url 'playlist' playlist.id %}">View Playlist</a>
+
+        {% if request.user == playlist.user %}
+        <form  action="{% url 'delete_playlist' playlist.id  %}"  class="deletePlaylist">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+        {% endif %}
+        
       </div>
     </div>
   </div>
