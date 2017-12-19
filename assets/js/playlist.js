@@ -1,7 +1,4 @@
 
-
-
-
   //ajax for adding songs
   $(document).on('submit', '#songForm' , function( event ){
     event.preventDefault();
@@ -82,15 +79,41 @@
     });
   });
 
+  // add playlist
   $(document).on('click', '#btn-add', function(event){
     event.preventDefault();
     var form = $('#add_playlist').serialize();
-    $.post({
+    var csrftoken = Cookies.get('csrftoken');
+
+    function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    $.ajax({
+      method: 'post',
       url: $(this).attr('url'),
       data: form
     }).done(function(response){
 
-     var playlist_tpl = '<div class="panel panel-default">'
+     var request_user = $('div#playlists').attr('request-user');
+
+     var append_request_user = '<button type="button" id="btn-edit-playlist" class="btn btn-info btn-lg">Edit</button>'
+                               +'<button type="submit" id="btn-update-playlist" style="display:none;" class="btn btn-info">Update</button>'
+                               +'<button type="submit" id="btn-cancel" style="display:none;" class="btn btn-info">Cancel</button>'
+                               +'<form  method="post" csrfmiddlewaretoken="'+csrftoken+'" action="/music/api/playlist/delete/'+response.id+'/"  class="deletePlaylist">'
+                                  +'<button type="submit">Delete</button>'
+                               +'</form>';
+
+     var playlist_tpl = '<div class="panel panel-default" id="'+response.id+'">'
                           +'<div class="panel-heading">'
                             +'<h3>'+ response.title +'</h3>'
                           +'</div>'
@@ -104,11 +127,16 @@
                              +'<hr class="visible-sm visible-xs">'
                               +'<p>0 songs</p>'
                               +'<p>by <strong>'+ response.user_email +'</strong></p>'
+                              +'<a id="'+response.id+'" class="btn btn-primary" href="/music/playlist/'+ response.id +'/">View Playlist</a>';
+               
+      if(request_user==response.user_email){
+        playlist_tpl = playlist_tpl + append_request_user;
+      }
+      var playlist_tpl_append = '</div>'
+                               +'</div>'
+                               +'</div>';
 
-                              +'<a class="btn btn-primary" href="/music/playlist/'+ response.id +'/">View Playlist</a>'
-                            +'</div>'
-                          +'</div>'
-                        +'</div>';
+      var playlist_tpl = playlist_tpl + playlist_tpl_append; 
       $('#playlists').append(playlist_tpl);
       $('#add_playlist')[0].reset();
     }).fail(function(response){
@@ -116,7 +144,8 @@
     });
   });
 
-  // ajax for deleting Playlist
+
+  // deleting Playlist
   $(document).on('submit', 'form.deletePlaylist', function( event ){
     event.preventDefault();
     $.ajax({
@@ -139,15 +168,12 @@
 
     $(this).closest('div.panel').css('border-color','coral');
     $(this).closest('div.panel').find('h3').hide();
-    //$(this).closest('div.panel').find('input#playlistName').attr({type:"text", value: text_title})
-    //$(this).closest('div.panel').find('input#playlistName').show();
     $(this).closest('div.panel').find('button#btn-edit-playlist').hide();
     $(this).closest('div.panel').find('button#btn-update-playlist').show();
     $(this).closest('div.panel').find('button#btn-cancel').show();
 
     $(this).closest('div.panel').find('div.panel-heading').append(
                     '<form method="post" csrfmiddlewaretoken="'+csrftoken+'" class="update_playlist"  action="/music/api/playlist/update/'+id_title+'/'+'" > '
-
                    +'<input type="text" class="form-control" id="title" name="title" value="'+text_title+'" >'
                    +'</form>'        
     ) ;
@@ -157,19 +183,14 @@
   //cancel playlist
   $(document).on('click', 'button#btn-cancel', function(event){
     event.preventDefault();
-    //var text_title = $(this).closest('div.panel').find('h3').text();
 
     $(this).closest('div.panel').css('border-color','#ddd');
-    //$(this).closest('div.panel').find('h3').hide();
-    //$(this).closest('div.panel').find('input#playlistName').attr({type:"text", value: text_title})
-    //$(this).closest('div.panel').find('input#playlistName').show();
     $(this).closest('div.panel').find('button#btn-edit-playlist').show();
     $(this).closest('div.panel').find('button#btn-update-playlist').hide();
     $(this).hide()
     $('form.update_playlist').remove();
     $(this).closest('div.panel').find('h3').show();
-    //$(this).closest('div.panel').find('button#btn-cancel').show();
-
+    
   });
 
   //update playlist
@@ -202,13 +223,13 @@
       $('form.update_playlist').remove();
       $(this).closest('div.panel').css('border-color','#ddd');
       $(this).closest('div.panel').find('button#btn-edit-playlist').show();
-      //$(this).hide();
       $(this).closest('div.panel').find('button#btn-cancel').hide();
       $(this).closest('div.panel').find('h3').remove();
-
       $(this).closest('div.panel').find('div.panel-heading').append(
                     '<h3>'+ response.title +'</h3>'
       );
+      $(this).hide()
+
     });
 
   });
