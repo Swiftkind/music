@@ -4,12 +4,14 @@
 <form method="post" novalidate>
   {% csrf_token %}
   <label>Title:</label>
-  {{ form.title }}
-  {{ form.title.errors}}
+  {{ song.title }}
+  {{ song.title.errors}}
   <br>
-  <label>Link:</label>
+  <label>Link:  https://www.youtube.com/watch?v={{ song.link }}</label>
+  <br>
   {{ form.link }}
-  {{ form.link.errors}}
+  {{ form.link.errors }}
   <button type="submit">Update Song</button>
+  <input type="button" value="Go back!" onclick="history.back()"/>
 </form>
 {% endblock %}
