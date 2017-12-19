@@ -22,3 +22,12 @@ class PlaylistViewSet(viewsets.ViewSet):
         instance = get_object_or_404(Playlist, pk=playlist_id)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def update_playlist(self, request, playlist_id):
+        instance = get_object_or_404(Playlist, pk=playlist_id)           
+        serializer = PlaylistSerializer(data=self.request.data, instance=instance)
+        if serializer.is_valid():
+            serializer.title = self.request.data['title']
+            serializer.save(user=self.request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
