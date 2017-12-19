@@ -30,7 +30,7 @@
 <div class="col-md-4">
   <div id="playlists" request-user="{{ request.user }}">
 {% if playlists %}
-  {% for playlist in playlists %}
+  {% for playlist in playlists|slice:":5" %}
   <div class="panel panel-default" id="{{ playlist.id }}" >
     <div class="panel-heading">
       <h3>{{ playlist.title }}</h3>
