@@ -84,6 +84,7 @@
   // add playlist
   $(document).on('click', '#btn-add', function(event){
     event.preventDefault();
+
     var form = $('#add_playlist').serialize();
     var csrftoken = Cookies.get('csrftoken');
 
@@ -103,7 +104,8 @@
     $.ajax({
       method: 'post',
       url: $(this).attr('url'),
-      data: form
+      data: form,
+      context: $(this)
     }).done(function(response){
 
      var request_user = $('div#playlists').attr('request-user');
@@ -142,10 +144,10 @@
       $('#playlists').append(playlist_tpl);
       $('#add_playlist')[0].reset();
     }).fail(function(response){
-      alert("Something went wrong!")
+      alert("Something went wrong! Playlist already exist or empty field");
+            
     });
   });
-
 
   // deleting Playlist
   $(document).on('submit', 'form.deletePlaylist', function( event ){
@@ -232,6 +234,10 @@
       );
       $(this).hide()
 
+    }).fail(function(response){
+      alert("Playlist name already exist!" );
+            
     });
 
   });
+
