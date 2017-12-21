@@ -1,3 +1,7 @@
+
+
+
+
   //ajax for adding songs
   $(document).on('submit', '#songForm' , function( event ){
     event.preventDefault();
@@ -110,4 +114,101 @@
     }).fail(function(response){
       alert("Something went wrong!")
     });
+  });
+
+  // ajax for deleting Playlist
+  $(document).on('submit', 'form.deletePlaylist', function( event ){
+    event.preventDefault();
+    $.ajax({
+      method: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      context: $(this)
+    }).done(function(response){
+      //remove playlist from the template
+      $(this).closest("div.panel").remove();
+    });
+  });
+
+  //edit playlist
+  $(document).on('click', 'button#btn-edit-playlist', function(event){
+    event.preventDefault();
+    var text_title = $(this).closest('div.panel').find('h3').text();
+    var id_title = $(this).closest('div.panel').attr('id');
+    var csrftoken = Cookies.get('csrftoken');
+
+    $(this).closest('div.panel').css('border-color','coral');
+    $(this).closest('div.panel').find('h3').hide();
+    //$(this).closest('div.panel').find('input#playlistName').attr({type:"text", value: text_title})
+    //$(this).closest('div.panel').find('input#playlistName').show();
+    $(this).closest('div.panel').find('button#btn-edit-playlist').hide();
+    $(this).closest('div.panel').find('button#btn-update-playlist').show();
+    $(this).closest('div.panel').find('button#btn-cancel').show();
+
+    $(this).closest('div.panel').find('div.panel-heading').append(
+                    '<form method="post" csrfmiddlewaretoken="'+csrftoken+'" class="update_playlist"  action="/music/api/playlist/update/'+id_title+'/'+'" > '
+
+                   +'<input type="text" class="form-control" id="title" name="title" value="'+text_title+'" >'
+                   +'</form>'        
+    ) ;
+
+  });
+
+  //cancel playlist
+  $(document).on('click', 'button#btn-cancel', function(event){
+    event.preventDefault();
+    //var text_title = $(this).closest('div.panel').find('h3').text();
+
+    $(this).closest('div.panel').css('border-color','#ddd');
+    //$(this).closest('div.panel').find('h3').hide();
+    //$(this).closest('div.panel').find('input#playlistName').attr({type:"text", value: text_title})
+    //$(this).closest('div.panel').find('input#playlistName').show();
+    $(this).closest('div.panel').find('button#btn-edit-playlist').show();
+    $(this).closest('div.panel').find('button#btn-update-playlist').hide();
+    $(this).hide()
+    $('form.update_playlist').remove();
+    $(this).closest('div.panel').find('h3').show();
+    //$(this).closest('div.panel').find('button#btn-cancel').show();
+
+  });
+
+  //update playlist
+  $(document).on('click', 'button#btn-update-playlist', function(event){
+    event.preventDefault();
+
+    var csrftoken = Cookies.get('csrftoken');
+    var form = $('form.update_playlist').serialize();
+
+    function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+         
+    $.ajax({
+      type: 'post',
+      url: $('form.update_playlist').attr('action'),
+      data: form,
+      context: $(this),
+     
+    }).done(function(response){
+      $('form.update_playlist').remove();
+      $(this).closest('div.panel').css('border-color','#ddd');
+      $(this).closest('div.panel').find('button#btn-edit-playlist').show();
+      //$(this).hide();
+      $(this).closest('div.panel').find('button#btn-cancel').hide();
+      $(this).closest('div.panel').find('h3').remove();
+
+      $(this).closest('div.panel').find('div.panel-heading').append(
+                    '<h3>'+ response.title +'</h3>'
+      );
+    });
+
   });
