@@ -4,7 +4,7 @@
 <h2>Search Results</h2>
 {% if playlists %}
   {% for playlist in playlists %}
-  <div class="panel panel-default">
+  <div class="panel panel-default" id="{{ playlist.id }}" >
     <div class="panel-heading">
       <h3>{{ playlist.title }}</h3>
     </div>
@@ -19,7 +19,21 @@
         <p>{{ playlist.number_of_songs }} song{{ playlist.number_of_songs|pluralize }}</p>
         <p>by <strong>{{ playlist.user }}</strong></p>
 
-        <a class="btn btn-primary" href="{% url 'playlist' playlist.id %}">View Playlist</a>
+        <a id="{{playlist.id}}" class="btn btn-primary" href="{% url 'playlist' playlist.id %}">View Playlist</a>
+
+        {% if request.user == playlist.user %}
+        
+        <button type="button" id="btn-edit-playlist" class="btn btn-info btn-lg">Edit</button>
+
+        <button type="submit" id="btn-update-playlist" style="display:none;" class="btn btn-info">Update</button>
+        <button type="submit" id="btn-cancel" style="display:none;" class="btn btn-info">Cancel</button>
+
+        <form  action="{% url 'delete_playlist' playlist.id  %}"  class="deletePlaylist">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+        {% endif %}
+
       </div>
     </div>
   </div>

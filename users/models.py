@@ -79,7 +79,7 @@ class ProfilePicture(models.Model):
     """
     user = models.ForeignKey(User)
     date_upload = models.DateTimeField(auto_now_add=True)
-    imagefile = models.ImageField(null=True, blank=True, upload_to='images/')
+    imagefile = models.ImageField(null=True, blank=True, upload_to='images/',default='images/default_profile.jpg')
 
     def get_image(self):
         if self.imagefile:

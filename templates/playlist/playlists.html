@@ -12,7 +12,7 @@
 
       <form class="form-inline" id="add_playlist" novalidate>
         {% csrf_token %}
-        <input class="form-control" type="text" name="title" placeholder="Add playlist">
+        <input class="form-control" type="text" name="title" placeholder="Add playlist" id="add-playlist">
         <button type='submit' class="btn btn-default" id="btn-add" url="{% url 'playlist' %}">Create Playlist</button>
       </form>
 
@@ -28,10 +28,10 @@
 </div>
 
 <div class="col-md-4">
-  <div id="playlists">
+  <div id="playlists" request-user="{{ request.user }}">
 {% if playlists %}
-  {% for playlist in playlists %}
-  <div class="panel panel-default" id="{{ playlist.id }}" title="{{ playlist.title }}">
+  {% for playlist in playlists|slice:":10" %}
+  <div class="panel panel-default" id="{{ playlist.id }}" >
     <div class="panel-heading">
       <h3>{{ playlist.title }}</h3>
     </div>
@@ -46,7 +46,7 @@
         <p>{{ playlist.number_of_songs }} song{{ playlist.number_of_songs|pluralize }}</p>
         <p>by <strong>{{ playlist.user }}</strong></p>
 
-        <a class="btn btn-primary" href="{% url 'playlist' playlist.id %}">View Playlist</a>
+        <a id="{{playlist.id}}" class="btn btn-primary" href="{% url 'playlist' playlist.id %}">View Playlist</a>
 
         {% if request.user == playlist.user %}
         
@@ -75,6 +75,8 @@
 </div>
 
 {% endblock %}
+
+
 
 
 
